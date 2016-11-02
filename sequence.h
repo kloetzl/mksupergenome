@@ -65,6 +65,7 @@ class sequence
 
 std::string reverse(const std::string &);
 double gc_content(const std::string &) noexcept;
+std::string filter_nucl(const std::string &);
 
 class genome
 {

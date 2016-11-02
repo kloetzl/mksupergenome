@@ -67,7 +67,7 @@ std::vector<sequence> read_fasta(std::string s_file_name, std::string prefix)
 
 	pfasta_seq ps;
 	while ((l = pfasta_read(&pf, &ps)) == 0) {
-		sequences.emplace_back(prefix + ps.name, ps.seq);
+		sequences.emplace_back(prefix + ps.name, filter_nucl(ps.seq));
 		pfasta_seq_free(&ps);
 	}
 

@@ -5,13 +5,12 @@
  * This file contains utility functions for working with DNA sequences.
  */
 
+#include <cctype>
 #include <memory>
 #include <vector>
 
-#include <ctype.h>
 #include <err.h>
 #include <limits.h>
-#include <string.h>
 // #include "global.h"
 #include "sequence.h"
 
@@ -56,6 +55,33 @@ std::string reverse(const std::string &base)
 
 	ret.replace(0, len, str);
 	delete[] str;
+
+	return ret;
+}
+
+std::string filter_nucl(const std::string &base)
+{
+	std::string ret{};
+	ret.reserve(base.size());
+
+	for (auto c: base) {
+		switch (c) {
+			case 'A':
+			case 'C':
+			case 'G':
+			case 'T':
+				ret += c;
+				break;
+			case 'a':
+			case 'c':
+			case 'g':
+			case 't':
+				ret += std::toupper(c);
+				break;
+			default:
+				break;
+		}
+	}
 
 	return ret;
 }
