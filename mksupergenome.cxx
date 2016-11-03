@@ -84,12 +84,12 @@ int main(int argc, char *argv[])
 				FLAGS |= FLAGS & flags::verbose ? flags::extra_verbose
 												: flags::verbose;
 				break;
-			case 'r': {
+			/*case 'r': {
 				if (strcmp(optarg, "longest") == 0) break;
 				use_longest = false;
 				reference_file_name = optarg;
 				break;
-			}
+			}*/
 			case 't': {
 #ifdef _OPENMP
 				errno = 0;
@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
 	std::vector<genome> genomes;
 	genomes.reserve(argc);
 
-	genome reference_genome;
+	// genome reference_genome;
 	std::vector<std::string> file_names;
 	file_names.reserve(argc);
 
@@ -153,14 +153,14 @@ int main(int argc, char *argv[])
 		file_names.push_back("-"); // if no files are supplied, read from stdin
 	}
 
-	if (!use_longest) {
+	/*if (!use_longest) {
 		auto it = std::find(file_names.begin(), file_names.end(),
 							reference_file_name);
 		if (it != file_names.end()) {
 			file_names.erase(it);
 		}
 		reference_genome = read_genome(reference_file_name);
-	}
+	}*/
 
 	// read all genomes
 	for (auto file_name : file_names) {
@@ -168,7 +168,7 @@ int main(int argc, char *argv[])
 	}
 
 	// if no reference is given, pick the longest genome
-	if (use_longest) {
+	/*if (use_longest) {
 		auto it = max_element(begin(genomes), end(genomes),
 							  [](const genome &a, const genome &b) {
 								  return a.joined_length < b.joined_length;
@@ -176,7 +176,7 @@ int main(int argc, char *argv[])
 		reference_genome = *it;
 		// delete longest_index
 		genomes.erase(it);
-	}
+	}*/
 
 	// flatten the `genomes` array into `sequences`.
 	std::vector<sequence> sequences{};
@@ -185,9 +185,36 @@ int main(int argc, char *argv[])
 		std::move(genome.contigs.begin(), genome.contigs.end(), inserter);
 	}
 
-	auto nm = filter(reference_genome.contigs[0], sequences);
-	for (auto &temp : nm) {
-		std::cout << temp.get_name() << "\n";
+	std::vector<sequence> supergenome{};
+
+	auto it = max_element(begin(sequences), end(sequences),
+						  [](const sequence &a, const sequence &b) {
+							  return a.size() < b.size();
+						  });
+	auto ref = *it;
+	supergenome.push_back(ref);
+	sequences.erase(it);
+
+	auto set = sequences;
+	while (!set.empty()) {
+		auto nm = filter(ref, set);
+		std::cerr << "set: "<< set.size() << " nm: " << nm.size() << std::endl;
+		if (nm.empty()) {
+			break;
+		}
+		auto it = max_element(begin(nm), end(nm),
+							  [](const sequence &a, const sequence &b) {
+								  return a.size() < b.size();
+							  });
+		auto new_ref = *it;
+		supergenome.push_back(new_ref);
+		nm.erase(it);
+		set = nm;
+		ref = new_ref;
+	}
+
+	for (auto &seq : supergenome) {
+		std::cout << seq.get_name() << "\n";
 	}
 
 	return 0;

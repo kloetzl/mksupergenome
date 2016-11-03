@@ -64,22 +64,17 @@ std::string filter_nucl(const std::string &base)
 	std::string ret{};
 	ret.reserve(base.size());
 
-	for (auto c: base) {
+	for (auto c : base) {
 		switch (c) {
 			case 'A':
 			case 'C':
 			case 'G':
-			case 'T':
-				ret += c;
-				break;
+			case 'T': ret += c; break;
 			case 'a':
 			case 'c':
 			case 'g':
-			case 't':
-				ret += std::toupper(c);
-				break;
-			default:
-				break;
+			case 't': ret += std::toupper(c); break;
+			default: break;
 		}
 	}
 

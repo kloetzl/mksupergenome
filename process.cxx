@@ -122,7 +122,7 @@ auto find_non_matches(const esa &ref, double gc, sequence &query_seq)
 	size_t last_length = 0;
 	// This variable indicates that the last anchor was the right anchor of a
 	// pair.
-	bool last_was_right_anchor = false;
+	bool last_was_right_anchor = true;
 
 	size_t this_pos_Q = 0;
 	size_t this_pos_S;
@@ -154,7 +154,7 @@ auto find_non_matches(const esa &ref, double gc, sequence &query_seq)
 			} else {
 				// no anchor pair, left anchor!
 				if (last_was_right_anchor || last_length / 2 >= threshold) {
-					// TODO: push gap
+					// push gap
 					auto last_end = last_pos_Q + last_length;
 					if (this_pos_Q - last_end >= threshold) {
 						auto subsequence =
@@ -175,6 +175,12 @@ auto find_non_matches(const esa &ref, double gc, sequence &query_seq)
 
 		// Advance
 		this_pos_Q += this_length + 1;
+	}
+
+	// no anchor?
+	if (last_was_right_anchor && last_pos_Q == 0) {
+		// push whole query
+		nm.push_back(query_seq);
 	}
 
 	return nm;
