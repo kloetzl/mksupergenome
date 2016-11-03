@@ -149,7 +149,7 @@ int main(int argc, char *argv[])
 		file_names.push_back(*argv++);
 	}
 
-	if (file_names.size() < 2) {
+	if (file_names.size() < 1) {
 		file_names.push_back("-"); // if no files are supplied, read from stdin
 	}
 
@@ -198,7 +198,8 @@ int main(int argc, char *argv[])
 	auto set = sequences;
 	while (!set.empty()) {
 		auto nm = filter(ref, set);
-		std::cerr << "set: "<< set.size() << " nm: " << nm.size() << std::endl;
+		std::cerr << "set: " << set.size() << "  nm: " << nm.size()
+				  << std::endl;
 		if (nm.empty()) {
 			break;
 		}
@@ -226,14 +227,12 @@ int main(int argc, char *argv[])
 void usage(void)
 {
 	const char str[] = {
-		"Usage: mksupergenome [-lv] [-t INT] [-r longest|FILENAME] "
-		"FILES...\n"
+		"Usage: mksupergenome [-lv] [-t INT] FILES...\n"
 		"\tFILES... can be any sequence of FASTA files. If no files are "
 		"supplied, stdin is used instead.\n"
-		"Options:\n"
-		"  -r longest|FILENAME   Use the sequence from FILENAME as reference; "
-		"default: "
-		"longest\n"
+		/*"Options:\n"
+		"  -r longest|FILENAME   Use the sequence from FILENAME as reference;"
+		"default: longest\n"*/
 		"  -v, --verbose     Prints additional information\n"
 #ifdef _OPENMP
 		"  -t, --threads <INT> \n"
