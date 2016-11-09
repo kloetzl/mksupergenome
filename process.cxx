@@ -156,7 +156,7 @@ auto find_non_matches(const esa &ref, double gc, sequence &query_seq)
 				if (last_was_right_anchor || last_length / 2 >= threshold) {
 					// push gap
 					auto last_end = last_pos_Q + last_length;
-					if (this_pos_Q - last_end >= threshold) {
+					if (this_pos_Q - last_end >= threshold * 2) {
 						auto subsequence =
 							query_seq.sub(last_end, this_pos_Q - last_end);
 						nm.push_back(subsequence);
