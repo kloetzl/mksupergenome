@@ -1,5 +1,6 @@
 
 #include <cmath>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -131,6 +132,8 @@ auto find_non_matches(const esa &ref, double gc, sequence &query_seq)
 	size_t threshold =
 		minAnchorLength(1 - std::sqrt(1 - RANDOM_ANCHOR_PROP), gc, ref.size());
 
+	std::cerr << "threshold: " << threshold << std::endl;
+
 	// Iterate over the complete query.
 	while (this_pos_Q < query_length) {
 		auto inter =
@@ -156,7 +159,7 @@ auto find_non_matches(const esa &ref, double gc, sequence &query_seq)
 				if (last_was_right_anchor || last_length / 2 >= threshold) {
 					// push gap
 					auto last_end = last_pos_Q + last_length;
-					if (this_pos_Q - last_end >= threshold * 2) {
+					if (this_pos_Q - last_end >= MIN_SPLIT_LENGTH) {
 						auto subsequence =
 							query_seq.sub(last_end, this_pos_Q - last_end);
 						nm.push_back(subsequence);

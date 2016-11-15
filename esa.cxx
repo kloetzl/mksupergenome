@@ -20,7 +20,7 @@
 #include "global.h"
 
 /** @brief The prefix length up to which LCP-intervals are cached. */
-const size_t CACHE_LENGTH = 10;
+const size_t CACHE_LENGTH = 4;
 
 /** @brief Map a code to the character. */
 constexpr char code2char(ssize_t code) noexcept

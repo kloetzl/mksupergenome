@@ -46,6 +46,7 @@
 int FLAGS = flags::none;
 int THREADS = 1;
 double RANDOM_ANCHOR_PROP = 0.05;
+ssize_t MIN_SPLIT_LENGTH = 1000;
 
 void usage(void);
 void version(void);
@@ -215,7 +216,7 @@ int main(int argc, char *argv[])
 	}
 
 	for (auto &seq : supergenome) {
-		std::cout << seq.get_name() << "\n";
+		std::cout << seq.to_fasta();
 	}
 
 	return 0;

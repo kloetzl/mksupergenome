@@ -28,6 +28,26 @@ sequence::sequence(std::string name, std::string nucl_) noexcept
 	}
 }
 
+std::string sequence::to_fasta() const
+{
+	static const ssize_t LINE_LENGTH = 70;
+
+	auto ret = ">" + get_name() + "\n";
+	ret.reserve(ret.size() + length + length / LINE_LENGTH);
+
+	auto it = this->begin();
+	while (it < this->end()) {
+		auto ll = std::min(this->end() - it, LINE_LENGTH);
+
+		ret.append(it, it + ll);
+		ret += '\n';
+
+		it += ll;
+	}
+
+	return ret;
+}
+
 /**
  * @brief Compute the reverse complement.
  * @param base - The master string.

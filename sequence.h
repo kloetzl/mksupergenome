@@ -19,6 +19,8 @@ class sequence
 	sequence() = default;
 	sequence(std::string, std::string) noexcept;
 
+	std::string to_fasta() const;
+
 	auto size() const noexcept
 	{
 		return length;
