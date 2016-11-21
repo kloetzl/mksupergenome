@@ -8,10 +8,8 @@
 #include <memory>
 
 #include <sys/types.h>
-// #include "config.h"
 
 #include <divsufsort.h>
-#include <gsl/gsl>
 
 #include "sequence.h"
 
