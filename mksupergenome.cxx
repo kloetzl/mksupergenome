@@ -62,7 +62,6 @@ int main(int argc, char *argv[])
 		{"help", no_argument, NULL, 'h'},
 		{"verbose", no_argument, NULL, 'v'},
 		{"threads", required_argument, NULL, 't'},
-		{"reference", required_argument, NULL, 'r'},
 		{0, 0, 0, 0}};
 
 #ifdef _OPENMP
@@ -72,7 +71,7 @@ int main(int argc, char *argv[])
 
 	// parse arguments
 	while (1) {
-		int c = getopt_long(argc, argv, "hvt:r:", long_options, NULL);
+		int c = getopt_long(argc, argv, "hv", long_options, NULL);
 
 		if (c == -1) {
 			break;
@@ -85,12 +84,6 @@ int main(int argc, char *argv[])
 				FLAGS |= FLAGS & flags::verbose ? flags::extra_verbose
 												: flags::verbose;
 				break;
-			/*case 'r': {
-				if (strcmp(optarg, "longest") == 0) break;
-				use_longest = false;
-				reference_file_name = optarg;
-				break;
-			}*/
 			case 't': {
 #ifdef _OPENMP
 				errno = 0;
@@ -116,7 +109,7 @@ int main(int argc, char *argv[])
 				THREADS = threads;
 #else
 				warnx(
-					"This version of ugalign was built without OpenMP and thus "
+					"This version of mksupergenome was built without OpenMP and thus "
 					"does not support multi threading. Ignoring -t argument.");
 #endif
 				break;
@@ -154,30 +147,10 @@ int main(int argc, char *argv[])
 		file_names.push_back("-"); // if no files are supplied, read from stdin
 	}
 
-	/*if (!use_longest) {
-		auto it = std::find(file_names.begin(), file_names.end(),
-							reference_file_name);
-		if (it != file_names.end()) {
-			file_names.erase(it);
-		}
-		reference_genome = read_genome(reference_file_name);
-	}*/
-
 	// read all genomes
 	for (auto file_name : file_names) {
 		genomes.push_back(read_genome(file_name));
 	}
-
-	// if no reference is given, pick the longest genome
-	/*if (use_longest) {
-		auto it = max_element(begin(genomes), end(genomes),
-							  [](const genome &a, const genome &b) {
-								  return a.joined_length < b.joined_length;
-							  });
-		reference_genome = *it;
-		// delete longest_index
-		genomes.erase(it);
-	}*/
 
 	// flatten the `genomes` array into `sequences`.
 	std::vector<sequence> sequences{};
